@@ -1,12 +1,12 @@
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
+from .tasks import update_rate
 
 
 class APITests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.abc = 'abc'
+        update_rate()
 
     def test_signup(self):
         response = self.client.post('/api/signup/')
         print(response.json())
-        print(self.abc)
