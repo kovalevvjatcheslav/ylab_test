@@ -9,9 +9,9 @@ from .models import Currency
 def update_rate():
     response = requests.get(settings.RATES_API_URL)
     data = response.json()
-    base, created = Currency.objects.get_or_create(title=data['base'], defaults={'is_base': True})
+    base, created = Currency.objects.get_or_create(title=data['base'].upper(), defaults={'is_base': True})
     for title, rate in data['rates'].items():
-        currency, created = Currency.objects.get_or_create(title=title,
+        currency, created = Currency.objects.get_or_create(title=title.upper(),
                                                            defaults={'base': base, 'rate': rate*settings.MULTIPLE})
         if not created:
             currency.base = base

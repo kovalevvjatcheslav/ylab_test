@@ -19,8 +19,21 @@ class Currency(models.Model):
         if self.is_base and (Currency.objects.filter(is_base=True).exists() or self.base is not None):
             raise ValidationError('Base currency already exists')
 
+    def __str__(self):
+        return self.title
+
 
 class Balance(models.Model):
     amount = models.DecimalField(decimal_places=2, max_digits=10)
     currency = models.ForeignKey(Currency, on_delete=models.DO_NOTHING)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.amount} {self.currency}'
+
+
+class Transaction(models.Model):
+    from_user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='debit')
+    to_user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='incoming')
+    from_amount = models.DecimalField(decimal_places=2, max_digits=10)
+    to_amount = models.DecimalField(decimal_places=2, max_digits=10)
