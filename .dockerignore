@@ -1,0 +1,6 @@
+.gitignore
+.idea/
+.venv/
+docker/
+.git/
+.dockerignore

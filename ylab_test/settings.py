@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '(pp+#4ig4g@1zi9jxojfz4w)k#mj7=0=h0u!f8qn6z79k=9rw3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -76,8 +76,12 @@ WSGI_APPLICATION = 'ylab_test.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
 
@@ -127,3 +131,5 @@ BITCOIN_RATE_URL = 'https://blockchain.info/ticker'
 MULTIPLE = 100
 
 UPDATE_TIMEOUT = 3  # minutes
+
+CELERY_BROKER_URL = "redis://redis:6379/0"

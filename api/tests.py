@@ -51,7 +51,7 @@ class APITests(TestCase):
         return self.client.post('/api/signup/', data=data, content_type='application/json')
 
     def __signin(self, email):
-        data = {'email': 'test@test.test', 'password': 'test'}
+        data = {'email': email, 'password': 'test'}
         return self.client.post('/api/signin/', data=data, content_type='application/json')
 
     def __transfer(self, current_email, current_currency, target_email, target_currency):

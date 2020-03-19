@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:12.2
+    restart: on-failure
+    env_file: .env
+    volumes:
+      - ../pgdata:/var/lib/postgresql/data
+
+  ylab_test:
+    image: ylab_test
+    restart: on-failure
+    env_file: .env
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    command: bash -c "python manage.py migrate --noinput && python manage.py update_rate && uwsgi uwsgi.ini"
+
+  redis:
+    image: redis:6.0-rc2
+    restart: on-failure
+
+  celery:
+    image: ylab_test
+    restart: on-failure
+    env_file: .env
+    command: bash -c "celery -A ylab_test worker -B"
