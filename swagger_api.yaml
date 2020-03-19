@@ -1,0 +1,121 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0-oas3"
+  title: Ylab test
+  description: This is a test task
+paths:
+  /signup/:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                amount:
+                  type: number
+                currency:
+                  type: string
+                password:
+                  type: string
+              required: [email, amount, currency, password]
+      summary: Sign up
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+          description: OK
+  /signin/:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required: [email, password]
+      summary: Sign in
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+          description: OK
+  /transfer/:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                targetEmail:
+                  type: string
+                  format: email
+                amount:
+                  type: number
+              required: [targetEmail, amount]
+      summary: Transfer money
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+          description: OK
+  /transactions/:
+    get:
+      summary: Get transactions
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  input:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        from:
+                          type: string
+                          format: email
+                        amount:
+                          type: number
+                  output:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        to:
+                          type: string
+                          format: email
+                        amount:
+                          type: number
+          description: OK
+servers:
+  - url: 'http://localhost:8000/api'
