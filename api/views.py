@@ -58,12 +58,13 @@ class Transfer(BaseView):
         user = request.user
         if user == AnonymousUser():
             raise NotAuthorizedException("User doesn't authorized")
+        user = User.objects.select_for_update().get(id=user.id)
         data = json.loads(request.body)
         validate(data, transfer_schema)
         amount = data['amount']
         if amount > user.balance.amount:
             raise Exception('Balance is low')
-        target_user = User.objects.get(username=data['targetEmail'])
+        target_user = User.objects.select_for_update().get(username=data['targetEmail'])
         user.balance.amount = user.balance.amount - amount
         user.balance.save()
         if target_user.balance.currency == user.balance.currency:
@@ -78,3 +79,18 @@ class Transfer(BaseView):
         target_user.balance.save()
         Transaction.objects.create(from_user=user, to_user=target_user, from_amount=amount, to_amount=target_amount)
         return JsonResponse({'ok': 'true'})
+
+
+class Transactions(BaseView):
+    @atomic
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if user == AnonymousUser():
+            raise NotAuthorizedException("User doesn't authorized")
+        user = User.objects.select_for_update().get(id=user.id)
+        input_transactions = user.input.all()
+        output_transactions = user.output.all()
+        return JsonResponse({
+            'input': [{'from': item.from_user.email, 'amount': item.to_amount} for item in input_transactions],
+            'output': [{'to': item.to_user.email, 'amount': item.from_amount} for item in output_transactions]
+        })

@@ -33,7 +33,7 @@ class Balance(models.Model):
 
 
 class Transaction(models.Model):
-    from_user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='debit')
-    to_user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='incoming')
+    from_user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='output')
+    to_user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='input')
     from_amount = models.DecimalField(decimal_places=2, max_digits=10)
     to_amount = models.DecimalField(decimal_places=2, max_digits=10)

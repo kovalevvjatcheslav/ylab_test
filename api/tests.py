@@ -36,6 +36,16 @@ class APITests(TestCase):
         self.assertEqual(response.status_code, 200, msg=response.json())
         self.assertEqual(response.json(), {'ok': 'true'})
 
+    def test_get_transactions(self):
+        current_email = 'test@test.test'
+        current_currency = 'USD'
+        target_currency = 'EUR'
+        target_email = 'test1@test.test'
+        self.__transfer(current_email, current_currency, target_email, target_currency)
+        response = self.client.get('/api/transactions/')
+        self.assertEqual(response.status_code, 200, msg=response.json())
+        self.assertEqual(response.json(), {'input': [], 'output': [{'to': 'test1@test.test', 'amount': '100.00'}]})
+
     def __signup(self, email, amount, currency):
         data = {'email': email, 'amount': amount, 'currency': currency, 'password': 'test'}
         return self.client.post('/api/signup/', data=data, content_type='application/json')
